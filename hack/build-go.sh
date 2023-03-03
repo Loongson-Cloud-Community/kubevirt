@@ -45,6 +45,9 @@ x86_64* | i?86_64* | amd64*)
 aarch64* | arm64*)
     ARCH="arm64"
     ;;
+loongarch64* | loong64*)
+    ARCH="loong64"
+    ;;
 *)
     echo "invalid Arch, only support x86_64 and aarch64"
     exit 1
@@ -65,7 +68,6 @@ if [ $# -eq 0 ]; then
     else
         (
             go $target -tags selinux ./pkg/...
-            GO111MODULE=off go $target ./staging/src/kubevirt.io/...
         )
         (
             go $target ./tests/...
@@ -115,9 +117,12 @@ for arg in $args; do
 
             # always build and link the binary based on CPU Architecture
             LINUX_NAME=${ARCH_BASENAME}-linux-${ARCH}
-
-            echo "building dynamic binary $BIN_NAME"
-            GOOS=linux GOARCH=${ARCH} go_build -tags selinux -o ${CMD_OUT_DIR}/${BIN_NAME}/${LINUX_NAME} -ldflags "$(kubevirt::version::ldflags)" $(pkg_dir linux ${ARCH})
+	    if [[ "${BIN_NAME}" == "virt-handler" || "${BIN_NAME}" == "virt-launcher" ]]; then
+		    echo "building dynamic binary $BIN_NAME"
+                    CGO_ENABLED=1 GOOS=linux GOARCH=${ARCH} go_build -tags selinux -o ${CMD_OUT_DIR}/${BIN_NAME}/${LINUX_NAME} -ldflags "$(kubevirt::version::ldflags)" $(pkg_dir linux ${ARCH})
+	    else
+                    CGO_ENABLED=0 GOOS=linux GOARCH=${ARCH} go_build -tags selinux -o ${CMD_OUT_DIR}/${BIN_NAME}/${LINUX_NAME} -ldflags "$(kubevirt::version::ldflags)" $(pkg_dir linux ${ARCH})
+            fi
 
             (cd ${CMD_OUT_DIR}/${BIN_NAME} && ln -sf ${LINUX_NAME} ${BIN_NAME})
 

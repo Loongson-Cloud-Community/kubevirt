@@ -41,11 +41,13 @@ const (
 	DefaultAMD64MachineType                         = "q35"
 	DefaultPPC64LEMachineType                       = "pseries"
 	DefaultAARCH64MachineType                       = "virt"
+	DefaultLOONG64MachineType                       = "loongson7a_v1.0"
 	DefaultCPURequest                               = "100m"
 	DefaultMemoryOvercommit                         = 100
 	DefaultAMD64EmulatedMachines                    = "q35*,pc-q35*"
 	DefaultPPC64LEEmulatedMachines                  = "pseries*"
 	DefaultAARCH64EmulatedMachines                  = "virt*"
+	DefaultLOONG64EmulatedMachines                  = "loongson7a*"
 	DefaultLessPVCSpaceToleration                   = 10
 	DefaultMinimumReservePVCBytes                   = 131072
 	DefaultNodeSelectors                            = ""
@@ -62,6 +64,7 @@ const (
 	SupportedGuestAgentVersions                     = "2.*,3.*,4.*,5.*"
 	DefaultARCHOVMFPath                             = "/usr/share/OVMF"
 	DefaultAARCH64OVMFPath                          = "/usr/share/AAVMF"
+	DefaultLOONG64OVMFPath                          = "/usr/share/qemu-kvm"
 	DefaultMemBalloonStatsPeriod             uint32 = 10
 	DefaultCPUAllocationRatio                       = 10
 	DefaultDiskVerificationMemoryLimitMBytes        = 1500
@@ -98,6 +101,13 @@ func IsARM64(arch string) bool {
 
 func IsPPC64(arch string) bool {
 	if arch == "ppc64le" {
+		return true
+	}
+	return false
+}
+
+func IsLOONG64(arch string) bool {
+	if arch == "loong64" || arch == "loongarch64" {
 		return true
 	}
 	return false

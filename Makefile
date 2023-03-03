@@ -56,8 +56,16 @@ apidocs:
 client-python:
 	hack/dockerized "DOCKER_TAG=${DOCKER_TAG} ./hack/gen-client-python/generate.sh"
 
-go-build:
-	hack/dockerized "export KUBEVIRT_NO_BAZEL=true && KUBEVIRT_VERSION=${KUBEVIRT_VERSION} ./hack/build-go.sh install ${WHAT}" && ./hack/build-copy-artifacts.sh ${WHAT}
+update-vendor:
+	go mod download && go mod tidy &&\
+	go get -u golang.org/x/sys golang.org/x/net &&\
+	go mod vendor
+
+u-root.patch: update-vendor
+	git apply $@
+
+go-build:  u-root.patch
+	export KUBEVIRT_NO_BAZEL=true && KUBEVIRT_VERSION=v0.50.0 && ./hack/build-go.sh install ${WHAT} && ./hack/build-copy-artifacts.sh ${WHAT}
 
 gosec:
 	hack/dockerized "GOSEC=${GOSEC} ARTIFACTS=${ARTIFACTS} ./hack/gosec.sh"
