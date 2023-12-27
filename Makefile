@@ -54,7 +54,7 @@ client-python:
 	hack/dockerized "DOCKER_TAG=${DOCKER_TAG} ./hack/gen-client-python/generate.sh"
 
 go-build:
-	hack/dockerized "export KUBEVIRT_NO_BAZEL=true && KUBEVIRT_VERSION=${KUBEVIRT_VERSION} KUBEVIRT_GO_BUILD_TAGS=${KUBEVIRT_GO_BUILD_TAGS} ./hack/build-go.sh install ${WHAT}" && ./hack/build-copy-artifacts.sh ${WHAT}
+	export KUBEVIRT_NO_BAZEL=true && KUBEVIRT_VERSION=${KUBEVIRT_VERSION} KUBEVIRT_GO_BUILD_TAGS=${KUBEVIRT_GO_BUILD_TAGS} ./hack/build-go.sh install ${WHAT} && ./hack/build-copy-artifacts.sh ${WHAT}
 
 gosec:
 	hack/dockerized "GOSEC=${GOSEC} ARTIFACTS=${ARTIFACTS} ./hack/gosec.sh"

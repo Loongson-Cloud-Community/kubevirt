@@ -135,6 +135,7 @@ type TemplateService interface {
 	GetLauncherImage() string
 	IsPPC64() bool
 	IsARM64() bool
+	IsLOONG64() bool
 }
 
 type templateService struct {
@@ -381,6 +382,10 @@ func (t *templateService) IsPPC64() bool {
 
 func (t *templateService) IsARM64() bool {
 	return t.clusterConfig.GetClusterCPUArch() == "arm64"
+}
+
+func (t *templateService) IsLOONG64() bool {
+	return t.clusterConfig.GetClusterCPUArch() == "loong64"
 }
 
 func generateQemuTimeoutWithJitter(qemuTimeoutBaseSeconds int) string {

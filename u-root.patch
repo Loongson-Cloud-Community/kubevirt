@@ -1,0 +1,25 @@
+From fc875ba0fd9888b4eada31de38493c55507e2ce7 Mon Sep 17 00:00:00 2001
+From: Weijie Wang <wangweijie@loongson.cn>
+Date: Wed, 27 Dec 2023 07:26:10 +0000
+Subject: [PATCH] u-root patch
+
+---
+ vendor/github.com/u-root/u-root/pkg/ubinary/little_endian.go | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/vendor/github.com/u-root/u-root/pkg/ubinary/little_endian.go b/vendor/github.com/u-root/u-root/pkg/ubinary/little_endian.go
+index 317bb91..c0779ef 100644
+--- a/vendor/github.com/u-root/u-root/pkg/ubinary/little_endian.go
++++ b/vendor/github.com/u-root/u-root/pkg/ubinary/little_endian.go
+@@ -2,7 +2,7 @@
+ // Use of this source code is governed by a BSD-style
+ // license that can be found in the LICENSE file.
+ 
+-// +build 386 amd64 arm arm64 mipsle mips64le ppc64le riscv riscv64
++// +build 386 amd64 arm arm64 mipsle mips64le ppc64le riscv riscv64 loong64
+ 
+ package ubinary
+ 
+-- 
+2.27.0
+

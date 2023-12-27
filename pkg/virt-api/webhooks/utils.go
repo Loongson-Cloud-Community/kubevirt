@@ -113,3 +113,10 @@ func IsPPC64() bool {
 	}
 	return false
 }
+
+func IsLOONG64() bool {
+	if Arch == "loong64" || Arch == "loongarch64" {
+		return true
+	}
+	return false
+}

@@ -281,6 +281,12 @@ func getCPUArchSpecificDefault(cpuArch string) (string, string, []string) {
 	case "ppc64le":
 		emulatedMachinesDefault := strings.Split(DefaultPPC64LEEmulatedMachines, ",")
 		return DefaultARCHOVMFPath, DefaultPPC64LEMachineType, emulatedMachinesDefault
+	case "loong64":
+		emulatedMachinesDefault := strings.Split(DefaultLOONG64EmulatedMachines, ",")
+		return DefaultLOONG64OVMFPath, DefaultLOONG64MachineType, emulatedMachinesDefault
+	case "loongarch64":
+		emulatedMachinesDefault := strings.Split(DefaultLOONG64EmulatedMachines, ",")
+		return DefaultLOONG64OVMFPath, DefaultLOONG64MachineType, emulatedMachinesDefault
 	default:
 		emulatedMachinesDefault := strings.Split(DefaultAMD64EmulatedMachines, ",")
 		return DefaultARCHOVMFPath, DefaultAMD64MachineType, emulatedMachinesDefault

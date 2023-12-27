@@ -45,6 +45,9 @@ x86_64* | i?86_64* | amd64*)
 aarch64* | arm64*)
     ARCH="arm64"
     ;;
+loongarch64* | loong64*)
+    ARCH="loong64"
+    ;;
 *)
     echo "invalid Arch, only support x86_64 and aarch64"
     exit 1
@@ -107,17 +110,22 @@ for arg in $args; do
         eval "$(go env)"
         BIN_NAME=$(basename $arg)
         ARCH_BASENAME=${BIN_NAME}-${KUBEVIRT_VERSION}
+	DYNAMIC_BUILD=1
         mkdir -p ${CMD_OUT_DIR}/${BIN_NAME}
         (
             go vet ./$arg/...
 
             cd $arg
 
+	    if [ "${BIN_NAME}" = "virtctl" ]; then
+		    DYNAMIC_BUILD=0
+	    fi
+
             # always build and link the binary based on CPU Architecture
             LINUX_NAME=${ARCH_BASENAME}-linux-${ARCH}
 
             echo "building dynamic binary $BIN_NAME"
-            GOOS=linux GOARCH=${ARCH} go_build -tags "${KUBEVIRT_GO_BUILD_TAGS}" -o ${CMD_OUT_DIR}/${BIN_NAME}/${LINUX_NAME} -ldflags "$(kubevirt::version::ldflags)" $(pkg_dir linux ${ARCH})
+            CGO_ENABLED=${DYNAMIC_BUILD} GOOS=linux GOARCH=${ARCH} go_build -tags "${KUBEVIRT_GO_BUILD_TAGS}" -o ${CMD_OUT_DIR}/${BIN_NAME}/${LINUX_NAME} -ldflags "$(kubevirt::version::ldflags)" $(pkg_dir linux ${ARCH})
 
             (cd ${CMD_OUT_DIR}/${BIN_NAME} && ln -sf ${LINUX_NAME} ${BIN_NAME})
 
