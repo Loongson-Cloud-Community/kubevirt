@@ -29,6 +29,13 @@ func (d *Defaulter) IsARM64() bool {
 	return false
 }
 
+func (d *Defaulter) IsLOONG64() bool {
+	if d.Architecture == "loong64" || d.Architecture == "loongarch64" {
+		return true
+	}
+	return false
+}
+
 func (d *Defaulter) SetDefaults_Devices(devices *Devices) {
 
 }
@@ -41,6 +48,8 @@ func (d *Defaulter) SetDefaults_OSType(ostype *OSType) {
 			ostype.Arch = "ppc64le"
 		} else if d.IsARM64() {
 			ostype.Arch = "aarch64"
+		} else if d.IsLOONG64() {
+			ostype.Arch = "loongarch64"
 		} else {
 			ostype.Arch = "x86_64"
 		}
@@ -52,6 +61,8 @@ func (d *Defaulter) SetDefaults_OSType(ostype *OSType) {
 		if d.IsPPC64() {
 			ostype.Machine = "pseries"
 		} else if d.IsARM64() {
+			ostype.Machine = "virt"
+		} else if d.IsLOONG64() {
 			ostype.Machine = "virt"
 		} else {
 			ostype.Machine = "q35"

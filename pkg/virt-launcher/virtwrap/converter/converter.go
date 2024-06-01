@@ -139,6 +139,13 @@ func isARM64(arch string) bool {
 	return false
 }
 
+func isLOONG64(arch string) bool {
+	if arch == "loong64" || arch == "loongarch64" {
+		return true
+	}
+	return false
+}
+
 func Convert_v1_Disk_To_api_Disk(c *ConverterContext, diskDevice *v1.Disk, disk *api.Disk, prefixMap map[string]deviceNamer, numQueues *uint, volumeStatusMap map[string]v1.VolumeStatus) error {
 	if diskDevice.Disk != nil {
 		var unit int
@@ -1269,6 +1276,17 @@ func Convert_v1_VirtualMachineInstance_To_api_Domain(vmi *v1.VirtualMachineInsta
 		}
 
 		if vmi.Spec.Domain.Firmware.Bootloader != nil && vmi.Spec.Domain.Firmware.Bootloader.BIOS != nil {
+			domain.Spec.OS.BootLoader = &api.Loader{
+				Path:	  "/usr/share/qemu-kvm/loongarch_bios.bin",
+				ReadOnly: "yes",
+				Secure:	  "no",
+				Type:	  "rom",
+			}
+
+			domain.Spec.OS.NVRam = &api.NVRam{
+				NVRam:	  filepath.Join("/tmp", domain.Spec.Name),
+				Template: "/usr/share/qemu-kvm/loongarch_bios.bin",
+			}
 			if vmi.Spec.Domain.Firmware.Bootloader.BIOS.UseSerial != nil && *vmi.Spec.Domain.Firmware.Bootloader.BIOS.UseSerial {
 				domain.Spec.OS.BIOS = &api.BIOS{
 					UseSerial: "yes",
